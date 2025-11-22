@@ -5,7 +5,7 @@ Ce dépôt explique comment installer des serveurs Minetest sur des conteneurs L
 
 ---
 
-## ⚙️ Installation de Minetest
+## Installation de Minetest
 
 ### Prérequis
 - Conteneurs LXC configurés (adresses IP, etc.)
@@ -34,7 +34,7 @@ Ce dépôt explique comment installer des serveurs Minetest sur des conteneurs L
 
 ---
 
-## 🌐 Configuration du DNAT
+## Configuration du DNAT
 
 Pour rendre chaque map accessible depuis l'extérieur, configurez des règles DNAT sur votre serveur principal vers chaque conteneur :
 ```bash
@@ -45,7 +45,7 @@ iptables -A PREROUTING -t nat -p udp -m udp --dport 30000 -j DNAT --to-destinati
 
 ---
 
-## 🎨 Installation du Dashboard
+## Installation du Dashboard
 
 ### 1. Installation d'Apache et PHP
 Sur votre serveur principal, installez les dépendances nécessaires :
@@ -87,7 +87,7 @@ Modifiez le fichier `index.php` selon vos besoins.
 
 ---
 
-## 🔧 Installation des Scripts
+## Installation des Scripts
 
 1. Déplacez les scripts `.sh` dans `/usr/bin/`
 2. Déplacez les fichiers `.service` dans `/etc/systemd/system/`
@@ -99,7 +99,7 @@ Modifiez le fichier `index.php` selon vos besoins.
 
 ---
 
-## ℹ️ Informations importantes
+## Informations importantes
 
 Ce dashboard est pleinement compatible avec les distributions disposant de :
 - LXC (Linux Containers)
@@ -108,7 +108,7 @@ Ce dashboard est pleinement compatible avec les distributions disposant de :
 
 ---
 
-## 🤝 Contribution
+## Contribution
 
 Les contributions sont les bienvenues ! Vous pouvez :
 - **Modifier** et **améliorer** le code
@@ -122,7 +122,7 @@ Les contributions sont les bienvenues ! Vous pouvez :
 
 ---
 
-## 📄 Licence
+## Licence
 
 Ce projet est sous **licence libre**.  
 Vous êtes libre de l'utiliser, le modifier et le redistribuer selon vos besoins.
