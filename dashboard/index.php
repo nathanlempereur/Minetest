@@ -123,7 +123,7 @@ function stopContainer($container) {
 // Fonction pour démarrer tous les conteneurs via un service
 function startAllContainers() {
     exec("sudo systemctl start lxcStart.service");
-
+}
 // Fonction pour arrêter tous les conteneurs
 function stopAllContainers() {
     exec("sudo systemctl start lxcStop.service");
