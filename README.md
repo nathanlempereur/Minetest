@@ -12,10 +12,10 @@ Ce dépôt explique comment installer des serveurs Minetest sur des conteneurs L
 - Debian/Ubuntu sur les conteneurs
 
 ### Installation
-1. Installez le serveur Minetest via APT :
+1. Installez le serveur Minetest et les paquets pour la suites via APT :
 ```bash
    apt update
-   apt install minetest-server
+   apt install minetest-server iptables iptables-persistent fail2ban
 ```
 
 2. Déplacez les fichiers :
