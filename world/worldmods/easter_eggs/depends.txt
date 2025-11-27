@@ -1,4 +1,0 @@
-default
-hud?
-hunger?
-hbhunger?
