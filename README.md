@@ -8,8 +8,8 @@ Ce dépôt explique comment installer des serveurs Minetest sur des conteneurs L
 ## Installation de Minetest
 
 ### Prérequis
-- Conteneurs LXC configurés (adresses IP, etc.)
-- Debian/Ubuntu sur les conteneurs
+- Conteneurs LXC configurés (adresses IP, etc.).
+- Debian/Ubuntu sur les conteneurs.
 
 ### Installation
 1. Installez le serveur Minetest et les paquets pour la suites via APT :
@@ -19,11 +19,12 @@ Ce dépôt explique comment installer des serveurs Minetest sur des conteneurs L
 ```
 
 2. Déplacez les fichiers :
-   - 'minetest.conf' de chaque map dans `/etc/minetest/` de son conteneurs
+   - 'minetest.conf' de chaque map dans `/etc/minetest/` de son conteneurs.
    - 'world.mt' dans `/var/games/minetest-server/.minetest/worlds/world`.
    - 'sudoers' dans `/etc`.
    - La jail et le filtre 'minetest-auth.conf' dans `/etc/fail2ban`.
    - Les fichier index de Dashboard et Web dans `/var/www`.
+   - Le dossier world dans `/var/games/minetest-server/.minetest/worlds/`.
    
 
 4. Définissez les permissions appropriées :
