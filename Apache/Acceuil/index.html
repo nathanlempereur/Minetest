@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serveurs Minetest - Rejoignez-nous !</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+	    background: linear-gradient(135deg, #667eef 0%, #766ba2 100%);
+	    border-radius: 25px;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .servers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .server-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .server-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .server-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .server-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .server-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .server-description {
+            color: #666;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .server-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .info-value {
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        .connect-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .connect-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .instructions {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+
+        .instructions h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            line-height: 2;
+            color: #333;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .instructions code {
+            background: #f8f9fa;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .servers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Serveurs Minetest</h1>
+            <p>Rejoignez notre communauté et explorez nos différents mondes !</p>
+        </header>
+
+        <div class="servers-grid">
+            <!-- Serveur Classique -->
+            <div class="server-card">
+                <div class="server-icon">🏔️</div>
+                <div class="server-name">Monde Classique</div>
+                <div class="server-description">
+                    Le monde vanilla classique de Minetest. Construction libre, survie et PvP activés.
+                </div>
+                <div class="server-info">
+                    <div class="info-row">
+                        <span class="info-label">Adresse :</span>
+                        <span class="info-value">172.16.202.206</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Port :</span>
+                        <span class="info-value">30000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Type :</span>
+                        <span class="info-value">Vanilla</span>
+                    </div>
+                </div>
+                <button class="connect-button" onclick="copyToClipboard('172.16.202.206', '30000', 'Classique')">
+                    📋 Copier l'adresse
+                </button>
+            </div>
+
+            <!-- Serveur Créatif -->
+            <div class="server-card">
+                <div class="server-icon">🎨</div>
+                <div class="server-name">Monde Créatif</div>
+                <div class="server-description">
+                    Mode créatif avec ressources illimitées. Vole, traverse les blocs et construis sans limites !
+                </div>
+                <div class="server-info">
+                    <div class="info-row">
+                        <span class="info-label">Adresse :</span>
+                        <span class="info-value">172.16.202.206</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Port :</span>
+                        <span class="info-value">30001</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Type :</span>
+                        <span class="info-value">Créatif</span>
+                    </div>
+                </div>
+                <button class="connect-button" onclick="copyToClipboard('172.16.202.206', '30001', 'Créatif')">
+                    📋 Copier l'adresse
+                </button>
+            </div>
+
+            <!-- Serveur Exploration -->
+            <div class="server-card">
+                <div class="server-icon">🗺️</div>
+                <div class="server-name">Monde Exploration</div>
+                <div class="server-description">
+                    Explore un monde magnifique, dans la ville de Paris, sans possibilité de construire. Parfait pour l'aventure !
+                </div>
+                <div class="server-info">
+                    <div class="info-row">
+                        <span class="info-label">Adresse :</span>
+                        <span class="info-value">172.16.202.206</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Port :</span>
+                        <span class="info-value">30002</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Type :</span>
+                        <span class="info-value">Exploration</span>
+                    </div>
+                </div>
+                <button class="connect-button" onclick="copyToClipboard('172.16.202.206', '30002', 'Exploration')">
+                    📋 Copier l'adresse
+                </button>
+            </div>
+
+            <!-- Serveur Survie -->
+            <div class="server-card">
+                <div class="server-icon">⚔️</div>
+                <div class="server-name">Monde Survie</div>
+                <div class="server-description">
+                    VoxeLibre (clone Minecraft). Survie hardcore avec tous les mécanismes de craft !
+                </div>
+                <div class="server-info">
+                    <div class="info-row">
+                        <span class="info-label">Adresse :</span>
+                        <span class="info-value">172.16.202.206</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Port :</span>
+                        <span class="info-value">30003</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Type :</span>
+                        <span class="info-value">VoxelLibre</span>
+                    </div>
+                </div>
+                <button class="connect-button" onclick="copyToClipboard('172.16.202.206', '30003', 'Survie')">
+                    📋 Copier l'adresse
+                </button>
+            </div>
+
+            <!-- Serveur PvP -->
+            <div class="server-card">
+                <div class="server-icon">🔥</div>
+                <div class="server-name">Monde Hardcore PvP</div>
+                <div class="server-description">
+                    Combat intense, temps accéléré et respawn aléatoire. Êtes-vous prêt pour le défi ?
+                </div>
+                <div class="server-info">
+                    <div class="info-row">
+                        <span class="info-label">Adresse :</span>
+                        <span class="info-value">172.16.202.206</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Port :</span>
+                        <span class="info-value">30004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Type :</span>
+                        <span class="info-value">PvP Hardcore</span>
+                    </div>
+                </div>
+                <button class="connect-button" onclick="copyToClipboard('172.16.202.206', '30004', 'PvP')">
+                    📋 Copier l'adresse
+                </button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h2>📖 Comment se connecter ?</h2>
+            <ol>
+                <li>Téléchargez et installez <strong>Minetest</strong> depuis <code>apt install minetest</code></li>
+                <li>Lancez Minetest et allez dans l'onglet <strong>"Rejoindre un jeu"</strong></li>
+                <li>Cliquez sur le bouton <strong>"Copier l'adresse"</strong> du serveur de votre choix</li>
+                <li>Dans Minetest, entrez l'adresse et le port dans les champs correspondants</li>
+                <li>Inscrivez vous, choisissez un nom d'utilisateur et un mot de passe</li>
+                <li>Cliquez sur <strong>"Se connecter"</strong> et amusez-vous !</li>
+            </ol>
+        </div>
+
+        <footer>
+            <p>© 2025 Lempereur Nathan - Serveurs Minetest - Tous droits réservés</p>
+            <p>Bon jeu ! 🎮</p>
+        </footer>
+    </div>
+
+    <script>
+        function copyToClipboard(address, port, serverName) {
+            const text = `${address}:${port}`;
+            
+            // Créer un élément temporaire pour copier
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            // Afficher une notification
+            alert(`✅ Adresse copiée !\n\nServeur: ${serverName}\nAdresse: ${text}\n\nCollez-la dans Minetest pour vous connecter.`);
+        }
+    </script>
+</body>
+</html>

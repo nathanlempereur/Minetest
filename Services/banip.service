@@ -1,0 +1,11 @@
+[Unit]
+Description=Ban authomatiques des ip qui forcent Minetest
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/BanIP.sh
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target
