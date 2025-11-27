@@ -1,27 +1,21 @@
 <?php
-// Démarre la session utilisateur pour gérer la connexion
 session_start();
 
-// Nom d'utilisateur et mot de passe de l'administrateur
-// ** À personnaliser avant l'utilisation **
 $ADMIN_USER = 'root';
-$ADMIN_PASS = 'btsinfo';
+$ADMIN_PASS = 'btsinfo'; // À CHANGER!
 
 if (isset($_POST['login'])) {
-	// Vérification des informations de connexion
     if ($_POST['username'] === $ADMIN_USER && $_POST['password'] === $ADMIN_PASS) {
         $_SESSION['logged_in'] = true;
     }
 }
 
 if (isset($_GET['logout'])) {
-	// Déconnexion et destruction de la session
     session_destroy();
     header('Location: /');
     exit;
 }
 
-// Si l'utilisateur n'est pas connecté, afficher la page de connexion
 if (!isset($_SESSION['logged_in'])) {
     ?>
     <!DOCTYPE html>
@@ -52,97 +46,115 @@ if (!isset($_SESSION['logged_in'])) {
     exit;
 }
 
-
-/**
- * Fonction pour obtenir l'état d'un conteneur LXC
- * @param string $container Le nom du conteneur
- * @return string L'état du conteneur (par exemple: RUNNING, STOPPED)
- */
 function getContainerStatus($container) {
     exec("sudo lxc-info -n $container -s 2>/dev/null | head -n 2 | tail -n 1 | awk '{print $2}'", $output);
     return isset($output[0]) ? trim($output[0]) : 'UNKNOWN';
 }
 
-/**
- * Fonction pour obtenir l'adresse IP d'un conteneur LXC
- * @param string $container Le nom du conteneur
- * @return string L'adresse IP du conteneur
- */
 function getContainerIP($container) {
     exec("sudo lxc-info -n $container -iH 2>/dev/null", $output);
     return isset($output[0]) ? trim($output[0]) : 'N/A';
 }
 
-/**
- * Fonction pour obtenir l'uptime du système
- * @return array Informations sur l'uptime du système
- */
 function getSystemInfoUptime() {
     exec("uptime -p", $output);
     $info1['uptime'] = $output[0] ?? 'N/A';
     return $info1;
 }
-
-/**
- * Fonction pour obtenir la charge moyenne du système
- * @return array Informations sur la charge moyenne du système
- */
 function getSystemInfoLoad() {
     exec("uptime | awk -F'load average:' '{print $2}'", $output);
     $info2['load'] = trim($output[0] ?? 'N/A');
     return $info2;
 }
-
-/**
- * Fonction pour obtenir la mémoire utilisée sur le système
- * @return array Informations sur l'utilisation de la mémoire
- */
 function getSystemInfoMemory() {
-    exec("free -h | awk '{print $3}' | head -n 2 | tail -n 1", $output);
+    exec("free -h | awk '{print $2}' | head -n 2 | tail -n 1", $output);
     $info3['memory'] = $output[0] ?? 'N/A';
     return $info3;
 }
 
-
-/**
- * Fonction pour démarrer un conteneur LXC
- * @param string $container Le nom du conteneur à démarrer
- */
 function startContainer($container) {
     exec("sudo lxc-start -n $container");
 }
 
-/**
- * Fonction pour arrêter un conteneur LXC
- * @param string $container Le nom du conteneur à arrêter
- */
 function stopContainer($container) {
     exec("sudo lxc-stop -n $container");
 }
 
-// Fonction pour démarrer tous les conteneurs via un service
 function startAllContainers() {
     exec("sudo systemctl start lxcStart.service");
 }
-// Fonction pour arrêter tous les conteneurs
+
 function stopAllContainers() {
     exec("sudo systemctl start lxcStop.service");
 }
 
-// Liste des conteneurs à gérer (peut être personnalisé selon les besoins)
-// name -> Nom du conteneur
-// port -> Port externe (DNAT)
-// ip -> Ip du conteneur
+// NOUVELLES FONCTIONS POUR LES LOGS ET IP BAN
+/**
+ * Lit le contenu du fichier IPban.csv.
+ * @return array Le tableau des lignes du fichier, ou un tableau vide en cas d'erreur.
+ */
+function getBannedIPs() {
+    // Utiliser sudo pour lire le fichier si nécessaire
+    // Le chemin vers le fichier de ban doit être autorisé dans /etc/sudoers (ex: www-data ALL=(root) NOPASSWD: /bin/cat /root/IPban.csv)
+    exec("sudo cat /root/IPban.csv 2>&1", $output, $return_var);
+    
+    if ($return_var !== 0) {
+        // En cas d'erreur de lecture (ex: droits, fichier non trouvé), retourner l'erreur ou un message vide
+        return ["Erreur de lecture du fichier IPban.csv. Vérifiez les droits sudo. Retour: $return_var. Message: " . implode(" ", $output)];
+    }
+    
+    // Si le fichier existe mais est vide, retourner un message
+    if (empty($output)) {
+        return ["Le fichier IPban.csv est vide."];
+    }
+    
+    return $output;
+}
+
+/**
+ * Lit les 10 dernières lignes du fichier de log d'un conteneur spécifique.
+ * @param string $container L'ID du conteneur (ex: minetest-classique).
+ * @return array Le tableau des 10 dernières lignes, ou un message d'erreur.
+ */
+function getContainerLogs($container) {
+    // Échapper le nom du conteneur pour éviter l'injection de shell
+    $safe_container = escapeshellarg($container);
+    
+    // Construction du chemin du fichier de log en utilisant la variable échappée
+    $log_file = "/var/log/minetest-logs/$safe_container.log";
+    
+    // La commande complète est exécutée en utilisant des guillemets doubles (")
+    // pour que PHP interprète $log_file avant l'exécution du shell.
+    $command = "/usr/bin/sudo /usr/bin/tail -n 10 $log_file 2>&1";
+    
+    exec($command, $output, $return_var);
+
+    if ($return_var !== 0) {
+        // En cas d'erreur (ex: droits, fichier non trouvé), retourner l'erreur ou un message
+        return ["Erreur de lecture du log pour $container. Vérifiez les droits sudo et le chemin du fichier."];
+    }
+    
+    if (empty($output)) {
+        return ["Le fichier de log $container.log est vide ou n'existe pas."];
+    }
+    
+    return $output;
+}
+// FIN NOUVELLES FONCTIONS
+
 $containers = [
-    'conteneur1' => ['name' => 'conteneur1', 'port' => 30000, 'ip' => '10.0.3.10'],
-    'conteneur2' => ['name' => 'conteneur2', 'port' => 30001, 'ip' => '10.0.3.5']
+    'minetest-classique' => ['name' => '🏔️ Classique', 'port' => 30000, 'ip' => '10.0.3.10'],
+    'minetest-creatif' => ['name' => '🎨 Créatif', 'port' => 30001, 'ip' => '10.0.3.5'],
+    'minetest-exploration' => ['name' => '🗺️ Exploration', 'port' => 30002, 'ip' => '10.0.3.20'],
+    'minetest-survie' => ['name' => '⚔️ Survie', 'port' => 30003, 'ip' => '10.0.3.25'],
+    'minetest-perso' => ['name' => '🔥 PvP', 'port' => 30004, 'ip' =>'10.0.3.30']
 ];
 
-
-// On charge les informations système
 $system_info1 = getSystemInfoUptime();
 $system_info2 = getSystemInfoLoad();
 $system_info3 = getSystemInfoMemory();
+
+$banned_ips = getBannedIPs(); // Appel de la nouvelle fonction
 
 // Vérification de l'action (démarrer ou arrêter)
 if (isset($_POST['start'])) {
@@ -159,8 +171,7 @@ if (isset($_POST['stop'])) {
     exit;
 }
 
-
-// Vérification de lactions globales pour tous les conteneurs (démarrer ou arrêter)
+// Actions globales pour tous les conteneurs
 if (isset($_POST['start_all'])) {
     startAllContainers();
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -215,16 +226,23 @@ if (isset($_POST['stop_all'])) {
         .detail-label { color: #888; }
         .detail-value { font-weight: bold; color: #4CAF50; }
         .action { padding: 5px 15px; border-radius: 20px; font-size: 0.9em; font-weight: bold; border: none; cursor: pointer; }
+
+        /* Style pour les logs et IP ban */
+        .log-section { background: #2a2a2a; padding: 20px; border-radius: 10px; margin-top: 20px; }
+        .log-section h2 { color: #4CAF50; margin-bottom: 15px; }
+        .log-content { background: #1a1a1a; padding: 15px; border-radius: 5px; overflow-x: auto; white-space: pre; font-family: monospace; font-size: 0.9em; color: #ddd; max-height: 400px; }
+        .ip-list { background: #1a1a1a; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 0.9em; color: #ddd; }
+        .ip-list div { padding: 3px 0; border-bottom: 1px dotted #333; }
+        .ip-list div:last-child { border-bottom: none; }
+        .logs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     </style>
 </head>
 <body>
-	<!-- Header de la page -->
     <header>
         <h1>🐧 Dashboard Minetest LXC</h1>
         <a href="?logout" class="logout">Déconnexion</a>
     </header>
 
-	<!-- Informations système -->
     <div class="system-info">
         <h2>📊 Serveur Central</h2>
         <div class="info-grid">
@@ -237,13 +255,12 @@ if (isset($_POST['stop_all'])) {
                 <div class="info-value"><?= htmlspecialchars($system_info2['load']) ?></div>
             </div>
             <div class="info-card">
-                <div class="info-label">RAm use</div>
+                <div class="info-label">Mémoire use</div>
                 <div class="info-value"><?= htmlspecialchars($system_info3['memory']) ?></div>
             </div>
         </div>
     </div>
 
-    <!-- Section de contrôle global -->
     <div class="global-controls">
         <h2>Contrôle Global des Conteneurs :</h2>
         <form method="POST" style="display: inline;">
@@ -254,18 +271,13 @@ if (isset($_POST['stop_all'])) {
         </form>
     </div>
 
-	<!-- Liste des conteneurs -->
     <h2 style="margin-bottom: 20px; color: #4CAF50;"> Conteneurs Minetest</h2>
-    
-    <!-- Division de Tous les conteneurs renseigner-->
     <div class="containers-grid">
         <?php foreach ($containers as $container_id => $data):
             $status = getContainerStatus($container_id);
             $ip = getContainerIP($container_id);
             $is_running = ($status === 'RUNNING');
         ?>
-        
-        <!-- Affichage du status en fonction de  getContainerStatus($container) -->
         <div class="container-card <?= $is_running ? '' : 'stopped' ?>">
             <div class="container-header">
                 <div class="container-title"><?= $data['name'] ?></div>
@@ -273,28 +285,23 @@ if (isset($_POST['stop_all'])) {
                     <?= $is_running ? '✓ RUNNING' : '✗ STOPPED' ?>
                 </div>
             </div>
-            <!-- Nom du conteneur -->
             <div class="detail-row">
                 <span class="detail-label">Conteneur:</span>
                 <span class="detail-value"><?= $container_id ?></span>
             </div>
-            <!-- l'ip renseigner -->
             <div class="detail-row">
                 <span class="detail-label">IP interne:</span>
                 <span class="detail-value"><?= $ip ?></span>
             </div>
-            <!-- Port Dnat renseigner -->
             <div class="detail-row">
                 <span class="detail-label">Port externe:</span>
                 <span class="detail-value"><?= $data['port'] ?></span>
             </div>
-            <!-- Port interne (supprimer si pas besoin) -->
             <div class="detail-row">
                 <span class="detail-label">Port interne:</span>
                 <span class="detail-value">30000</span>
             </div>
 
-            <!-- Boutons de contrôle pour démarrer et arrêter -->
             <form method="POST" style="margin-top: 10px;">
                 <input type="hidden" name="container_id" value="<?= $container_id ?>">
                 <?php if ($is_running): ?>
@@ -306,7 +313,39 @@ if (isset($_POST['stop_all'])) {
         </div>
         <?php endforeach; ?>
     </div>
-
+    
+    <div class="log-section">
+        <h2>⛔ Liste des IPs Bannies (/root/IPban.csv)</h2>
+        <div class="ip-list">
+            <?php if (!empty($banned_ips)): ?>
+                <?php foreach ($banned_ips as $line): ?>
+                    <div><?= htmlspecialchars($line) ?></div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div>Aucune IP bannie trouvée ou erreur de lecture.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <div class="log-section">
+        <h2>📄 Dernières Lignes des Logs des Conteneurs (10 dernières lignes)</h2>
+        <div class="logs-grid">
+            <?php foreach ($containers as $container_id => $data):
+                $logs = getContainerLogs($container_id);
+            ?>
+            <div class="info-card">
+                <h3 style="color: #eee; margin-bottom: 10px;"><?= $data['name'] ?> (<?= $container_id ?>)</h3>
+                <div class="log-content">
+                    <?php if (!empty($logs)): ?>
+                        <?= implode("\n", array_map('htmlspecialchars', $logs)) ?>
+                    <?php else: ?>
+                        Erreur lors de la récupération des logs.
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
     <div style="text-align: center; margin-top: 30px; color: #888;">
         <p>Actualisation automatique toutes les 30 secondes</p>
     </div>

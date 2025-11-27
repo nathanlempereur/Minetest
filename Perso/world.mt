@@ -1,5 +1,4 @@
-gameid = VoxeLibre
-world_name = VoxeLibre
+gameid = minetest
 backend = sqlite3
 player_backend = sqlite3
 auth_backend = sqlite3
