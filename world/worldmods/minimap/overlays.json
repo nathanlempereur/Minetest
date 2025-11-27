@@ -1,0 +1,10 @@
+[
+	{
+		"label": "IGN Scan 25",
+		"texture": "scan25.jpg"
+	},
+	{
+		"label": "Photo aérienne",
+		"texture": "ortho.jpg"
+	}
+]
