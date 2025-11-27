@@ -68,7 +68,7 @@ apt install apache2 php php-cli php-common libapache2-mod-php
 ```apache
    DocumentRoot /var/www/minetest
 ```
-La où vous avez mis le fihcier 'index.php', ici minetest/.
+Là où vous avez mis le fihcier 'index.php', ici minetest/.
 
 
 2. Définissez les permissions :
