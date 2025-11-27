@@ -105,7 +105,7 @@ Modifiez le fichier `index.php` et `index.html` selon vos besoins.
 ```bash
    systemctl daemon-reload
 ```
-4. Appliquez les droits d'exécution pour l'utilisateur `www-data`
+4. Appliquez les droits d'exécution pour l'utilisateur `www-data` dans `/etc/sudoers` ou utilisez le fichier donnée à déplacer dans `/etc`
 
 ---
 
