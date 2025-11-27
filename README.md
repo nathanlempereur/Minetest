@@ -18,11 +18,12 @@ Ce dépôt explique comment installer des serveurs Minetest sur des conteneurs L
    apt install minetest-server
 ```
 
-2. Déplacez les fichiers de configuration de chaque map dans `/etc/minetest/` :
-   - `minetest.conf`
-   - `world.mt`
+2. Déplacez les fichiers :
+   - 'minetest.conf' de chaque map dans `/etc/minetest/`
+   - 'world.mt' dans `/var/games/minetest-server/.minetest/worlds/world`.
+   
 
-3. Définissez les permissions appropriées :
+4. Définissez les permissions appropriées :
 ```bash
    chown -R Debian-minetest:games /etc/minetest
 ```
