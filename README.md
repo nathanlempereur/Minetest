@@ -83,7 +83,7 @@ La où vous avez mis le fihcier 'index.php', ici minetest/.
 
    
 ### 3. Personnalisation
-Modifiez le fichier `index.php` selon vos besoins.
+Modifiez le fichier `index.php` et `index.html` selon vos besoins.
 
 ### Aperçu
 <img width="1890" height="958" alt="image" src="https://github.com/user-attachments/assets/54331eb0-f399-4caa-9f4f-6c5bede1134f" />
