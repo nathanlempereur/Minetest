@@ -63,7 +63,7 @@ apt install apache2 php php-cli php-common libapache2-mod-php
 
 ### 2. Configuration du Dashboard
 
-1. Modifiez la configuration Apache dans `/etc/apache2/sites-available/000-default.conf` :
+1. Modifiez la configuration Apache dans `/etc/apache2/sites-available/000-default.conf` ou remplacez la par les fichiers de conf dans le dossier `Apache/`:
 ```apache
    DocumentRoot /var/www/minetest
 ```
@@ -135,6 +135,9 @@ Les contributions sont les bienvenues ! Vous pouvez :
 
 Ce projet est sous **licence libre**.  
 Vous êtes libre de l'utiliser, le modifier et le redistribuer selon vos besoins.
+
+Retrouvez le suivie du projet ici : 
+https://lnkd.in/ePENgcza
 
 ---
 
